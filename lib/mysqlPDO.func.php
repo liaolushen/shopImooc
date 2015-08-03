@@ -4,10 +4,14 @@
  * connect database
  */
 function connect() {
-    $link = mysql_connect(DB_HOST, DB_USER, DB_PWD) or die("database connect error:" . mysql_errno() . ":" . mysql_error());
-    mysql_set_charset(DB_CHARSET);
-    mysql_select_db(DB_DBNAME) or die("database open failed");
-    return $link;
+    try {
+        $conn = new PDO("mysql:host=DB_HOST;dbname=DB_NAME", DB_DBNAME, DB_PWD);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+    return $conn;
 }
 
 /**
@@ -18,11 +22,11 @@ function connect() {
  * Syntax : INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
  */
 function insert($table, $array) {
+    $conn = connect();
     $keys = join(",", array_keys($array));
     $vals = "'" . join("','", array_values($array)) . "'";
     $sql = "insert into {$table} ({$key}) values ({$vals})";
-    mysql_query($sql);
-    return mysql_insert_id();
+    return $conn->exec($sql);
 }
 
 /**
@@ -34,6 +38,7 @@ function insert($table, $array) {
  * Syntax : UPDATE table_name SET column1=value1,column2=value2,... WHERE some_column=some_value;
  */
 function update($table, $array, $where = null) {
+    $conn = connect();
     foreach ($array as $key => $val) {
         if ($str == null) {
             $sep = "";
@@ -43,8 +48,7 @@ function update($table, $array, $where = null) {
         $str .= $sep . $key . "='" . $val . "'";
     }
     $sql = "update {$table} set {$str} " . ($where == null ? null : "where " . $where);
-    mysql_query($sql);
-    return mysql_affected_rows();
+    return $conn->exec($sql);
 }
 
 /**
@@ -55,10 +59,10 @@ function update($table, $array, $where = null) {
  * Syntax : DELETE FROM table_name WHERE some_column=some_value;
  */
 function delete($table, $where = null) {
+    $conn = connect();
     $where = ($where == null ? null : "where " . $where);
     $sql = "delete from ($table) {$where}";
-    mysql_query($sql);
-    return mysql_affected_rows();
+    return $conn->exec($sql);
 }
 
 /**

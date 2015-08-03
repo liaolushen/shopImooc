@@ -40,5 +40,3 @@ function verifyImage($type = 1, $length = 4, $pixel = 0, $line = 0, $sess_name =
     imagegif($image);
     imagedestroy($image);
 }
-
-verifyImage(2, 4, 10, 3);
