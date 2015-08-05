@@ -1,14 +1,24 @@
 <?php
+
+/**
+ *验证管理员账号
+ */
 function checkAdmin($sql) {
     return fetchOne($sql);
 }
 
+/**
+ *验证管理员是否已登陆
+ */
 function checkLogined() {
     if (@$_SESSION['adminId'] == "" && $_COOKIE['adminId'] == "") {
         header("location:login.php");
     }
 }
 
+/**
+ *注销管理员
+ */
 function logout() {
     $_SESSION = array();
     if (isset($_COOKIE[session_name()])) {
@@ -22,4 +32,18 @@ function logout() {
     }
     session_destroy();
     header("location:login.php");
+}
+
+/**
+ *添加管理员
+ */
+function addAdmin() {
+    $arr = $_POST;
+    $arr['password'] = md5($arr['password']);
+    if (insert("imooc_admin", $arr)) {
+        $mes = "添加成功！<br/> <a href='addAdmin.php'>继续添加</a> <a href='listAdmin.php'>查看管理员</a>";
+    } else {
+        $mes = "添加失败！<br/> <a href='addAdmin.php'>重新添加</a>";
+    }
+    return $mes;
 }
