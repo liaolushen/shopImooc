@@ -61,11 +61,11 @@ if (!$rows) {
                                 <td align="center"><input type="button" value="修改" class="btn" onclick="editAdmin(<?php echo $row['id'];?>)"><input type="button" value="删除" class="btn"  onclick="delAdmin(<?php echo $row['id'];?>)"></td>
                             </tr>
                             <?php endforeach;?>
-                            <?php if ($totalRows > $pageSize): ?>
+<!--                             <?php if ($totalRows > $pageSize): ?>
                             <tr>
                             	<td colspan="4"><?php echo showPage($page, $totalPage);?></td>
                             </tr>
-                            <?php endif;?>
+                            <?php endif;?> -->
                         </tbody>
                     </table>
                 </div>

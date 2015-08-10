@@ -35,8 +35,9 @@ function insert($table, $array) {
  */
 function update($table, $array, $where = null) {
     foreach ($array as $key => $val) {
-        if ($str == null) {
+        if (!isset($str)) {
             $sep = "";
+            $str = "";
         } else {
             $sep = ",";
         }
@@ -56,7 +57,7 @@ function update($table, $array, $where = null) {
  */
 function delete($table, $where = null) {
     $where = ($where == null ? null : "where " . $where);
-    $sql = "delete from ($table) {$where}";
+    $sql = "delete from {$table} {$where}";
     mysql_query($sql);
     return mysql_affected_rows();
 }
@@ -84,7 +85,7 @@ function fetchAll($sql, $result_type = MYSQL_ASSOC) {
     while (@$row = mysql_fetch_array($result, $result_type)) {
         $rows[] = $row;
     }
-    return rows;
+    return $rows;
 }
 
 /**
